@@ -1,0 +1,7 @@
+Follow these steps if you have already started implementing
+
+- Make a copy of your folder in case there is a problem!
+- You can copy over everything from the new given folder to the old given folder
+- Copy over the autograder folder to under src
+- VERY IMPORTANT: Change the visibility of the nested Coordinate class to public in Maze.java
+- Note that you need to run the main under the Autograde.java!
