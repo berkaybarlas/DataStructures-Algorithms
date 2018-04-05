@@ -1,0 +1,55 @@
+Heap based execution started.
+Iteration: 0
+Ahmet offered to sell for 12.
+Mehmet offered to buy for 3.
+Berk offered to sell for 13.
+Can offered to buy for 6.
+Iteration: 1
+Ercan offered to buy for 8.
+Tugrul offered to sell for 10.
+Berk changed his/her sell offer to 9.
+Can changed his/her buy offer to 11.
+Berk sold to Can for 9.
+Iteration: 2
+Sabri offered to buy for 6.
+Mert offered to sell for 14.
+Tugrul removed his/her sell offer of 10.
+Mehmet changed his/her buy offer to 9.
+Iteration: 3
+Hakan offered to sell for 15.
+Emre offered to buy for 7.
+Mert changed his/her sell offer to 10.
+Iteration: 4
+Mert changed his/her sell offer to 8.
+Emre removed his/her buy offer of 7.
+Hakan changed his/her sell offer to 11.
+Mert sold to Mehmet for 8.
+Heap based execution took 6 miliseconds.
+
+Tree based execution started.
+Iteration: 0
+Ahmet offered to sell for 12.
+Mehmet offered to buy for 3.
+Berk offered to sell for 13.
+Can offered to buy for 6.
+Iteration: 1
+Ercan offered to buy for 8.
+Tugrul offered to sell for 10.
+Berk changed his/her sell offer to 9.
+Can changed his/her buy offer to 11.
+Berk sold to Can for 9.
+Iteration: 2
+Sabri offered to buy for 6.
+Mert offered to sell for 14.
+Tugrul removed his/her sell offer of 10.
+Mehmet changed his/her buy offer to 9.
+Iteration: 3
+Hakan offered to sell for 15.
+Emre offered to buy for 7.
+Mert changed his/her sell offer to 10.
+Iteration: 4
+Mert changed his/her sell offer to 8.
+Emre removed his/her buy offer of 7.
+Hakan changed his/her sell offer to 11.
+Mert sold to Mehmet for 8.
+Tree based execution took 5 miliseconds.
