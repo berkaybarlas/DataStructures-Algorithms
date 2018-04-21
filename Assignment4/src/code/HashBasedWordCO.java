@@ -1,5 +1,7 @@
 package code;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,14 +10,39 @@ public class HashBasedWordCO {
   HashMapDH<String, HashCounter<String>> coMat;
   HashSet<String> words;
   int windowSize;
+  
+  String[] ignoreList;
+  int minWordLen;
+  
+  /**
+   * 
+   * ADD MORE FIELDS IF NEEDED
+   * 
+   */
 
   public HashBasedWordCO() {
     this(5);
-
   }
 
   public HashBasedWordCO(int winSize) {
+    setWindowSize(winSize);
+    setIgnoredWords(new String[0]);
+    setMinimumWordLength(0);
+  }
+  
+  public void setIgnoredWords(String[] ignoredWords) {
+    ignoreList = ignoredWords;
+    /*
+     * ADD MORE CODE IF NEEDED
+     */
+  }
+  
+  public void setWindowSize(int winSize) {
     windowSize = winSize;
+  }
+  
+  public void setMinimumWordLength(int minLen) {
+    minWordLen = minLen;
   }
 
   public List<String> splitSentences(String text) {
@@ -50,7 +77,7 @@ public class HashBasedWordCO {
 
   // Returns the set of unique words, apart from the given ignored ones, given in
   // the text with word length constraints
-  public HashSet<String> getUniqueWords(String text, int minWordLen, String[] ignoreList) {
+  public HashSet<String> getUniqueWords(String text) {
     HashSet<String> uWords = new HashSet<String>();
     List<String> sentences = splitSentences(text);
     
@@ -67,11 +94,6 @@ public class HashBasedWordCO {
       }
     }
     return uWords;
-  }
-
-  public HashSet<String> getUniqueWords(String text) {
-    String[] ignore = { "and", "the", "or", "am", "are", "is", "was", "were", "a", "an", "be" };
-    return getUniqueWords(text, 2, ignore);
   }
 
   public void fillCoMat(String text) {
@@ -150,6 +172,41 @@ public class HashBasedWordCO {
                                                                                    // + " ");
       }
       System.out.println("");
+    }
+  }
+  public void printMatrixCSV(String fileName) {
+    if (coMat == null) {
+      System.out.format("Empty co-occurrence matrix!");
+      return;
+    }
+
+    FileWriter fileWrite = null;
+    try {
+      fileWrite = new FileWriter(fileName);
+
+      int i = 0;
+      for (String word : words.keySet()) {
+        if (i++ > 0)
+          fileWrite.append(",");
+        fileWrite.append(word);
+      }
+      fileWrite.append("\n");
+
+      for (String word1 : words.keySet()) {
+        i = 0;
+        fileWrite.append(word1 + ",");
+        for (String word2 : words.keySet()) {
+          if (i++ > 0)
+            fileWrite.append(",");
+          fileWrite.append(Integer.toString(coMat.get(word1).getCount(word2)));
+        }
+        fileWrite.append("\n");
+      }
+
+      fileWrite.close();
+    } catch (IOException e) {
+      System.out.println("Error Writing CSV file: " + fileName);
+      System.exit(0);
     }
   }
 

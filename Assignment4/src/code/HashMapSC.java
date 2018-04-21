@@ -1,10 +1,10 @@
 package code;
 
+import java.lang.reflect.Array;
 import java.util.LinkedList;
 
 import given.AbstractHashMap;
 import given.HashEntry;
-import given.iPrintable;
 
 /*
  * The file should contain the implementation of a hashmap with:
@@ -30,7 +30,7 @@ public class HashMapSC<Key, Value> extends AbstractHashMap<Key, Value> {
   protected void resizeBuckets(int newSize) {
     // Update the capacity
     N = nextPrime(newSize);
-    buckets = (LinkedList<HashEntry<Key, Value>>[]) new Object[N];
+    buckets = (LinkedList<HashEntry<Key, Value>>[]) Array.newInstance(LinkedList.class, N);
   }
 
   /*
