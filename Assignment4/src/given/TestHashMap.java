@@ -199,12 +199,10 @@ public class TestHashMap {
   }
 
   public boolean testRemoveAll() {
-    Set<String> keys = (Set<String>) mapFive.keySet();
-    List<String> tempKeys = new ArrayList<String>();
+    List<String> tempKeys = new ArrayList<>();
 
-    for (String key : keys)
+    for (String key : mapFive.keySet())
       tempKeys.add(key);
-    keys.clear();
 
     for (String key : tempKeys)
       mapFive.remove(key);

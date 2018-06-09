@@ -13,7 +13,7 @@ public class HashBasedWordCO {
   
   String[] ignoreList;
   int minWordLen;
-  
+  HashMapDH<String, Integer> ignoredHash;
   /**
    * 
    * ADD MORE FIELDS IF NEEDED
@@ -32,10 +32,15 @@ public class HashBasedWordCO {
   
   public void setIgnoredWords(String[] ignoredWords) {
     ignoreList = ignoredWords;
+    ignoredHash = new HashMapDH<>();
+    for(int i=0;i<ignoreList.length;i++){
+      ignoredHash.put(ignoreList[i],1);
+    }
     /*
      * ADD MORE CODE IF NEEDED
      */
   }
+
   
   public void setWindowSize(int winSize) {
     windowSize = winSize;
@@ -91,6 +96,9 @@ public class HashBasedWordCO {
         // TODO: Fill here
         // Make sure to NOT include any ignored words and words that are shorter than
         // the minWordLen
+        if(word.length()>=minWordLen && ignoredHash.get(word)==null){
+          uWords.put(word);
+        }
       }
     }
     return uWords;
@@ -143,9 +151,34 @@ public class HashBasedWordCO {
     // Further bit of help for setting up
     for (String word : words.keySet())
       coMat.put(word, new HashCounter<String>());
-    List<String> sentences = splitSentences(text);
 
+    List<String> sentences = splitSentences(text);
     // TODO: Implement co-occurence calculations
+    for(String sentence : sentences) {
+      String[] words = sentence.split("\\s+");
+
+      for(int i = 0; i<words.length ;i++) {
+        String word = words[i];
+
+        if (coMat.get(word) != null) {
+          int startIndex = i - windowSize;
+          if(startIndex<0) startIndex = 0;
+          for (int j = startIndex; j <= i + windowSize; j++) {
+            if (j < words.length && j!=i) {
+              String sentenceWord = words[j];
+              coMat.get(word).increment(sentenceWord);
+              }
+            }
+        }
+      }
+    }
+
+  }
+  private boolean isInclude(String[] words, String word){
+    for(int i=0; i<words.length;i++){
+      if(words[i].equals(word)) return true;
+    }
+    return false;
   }
 
   public int getCoOccurrenceValue(String word1, String word2) {

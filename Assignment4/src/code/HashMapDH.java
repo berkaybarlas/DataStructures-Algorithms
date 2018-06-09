@@ -5,6 +5,8 @@ import java.lang.reflect.Array;
 import given.AbstractHashMap;
 import given.HashEntry;
 import given.iPrintable;
+import java.util.LinkedList;
+import java.util.List;
 
 /*
  * The file should contain the implementation of a hashmap with:
@@ -27,7 +29,7 @@ public class HashMapDH<Key, Value> extends AbstractHashMap<Key, Value> {
   protected void resizeBuckets(int newSize) {
     // Update the capacity
     N = nextPrime(newSize);
-    buckets = (HashEntry<Key, Value>[]) Array.newInstance(HashEntry.class, N);
+     buckets = (HashEntry<Key, Value>[]) Array.newInstance(HashEntry.class, N);
   }
 
   // The threshold of the load factor for resizing
@@ -62,7 +64,7 @@ public class HashMapDH<Key, Value> extends AbstractHashMap<Key, Value> {
 
     // Set up the MAD compression and secondary hash parameters
     updateHashParams();
-
+    n = 0;
     /*
      * ADD MORE CODE IF NEEDED
      * 
@@ -83,8 +85,8 @@ public class HashMapDH<Key, Value> extends AbstractHashMap<Key, Value> {
    * Make sure to include the absolute value since there maybe integer overflow!
    */
   protected int primaryHash(int hashCode) {
-    // TODO: Implement MAD compression given the hash code, should be 1 line
-    return Math.abs(-1);
+    int primaryHash = (hashCode * a + b) % P;
+    return Math.abs(primaryHash);
   }
 
   /**
@@ -92,8 +94,7 @@ public class HashMapDH<Key, Value> extends AbstractHashMap<Key, Value> {
    * 
    */
   protected int secondaryHash(int hashCode) {
-    // TODO: Implement the secondary hash function taught in the class
-    return -1;
+    return (dhP - (hashCode % dhP));
   }
 
   @Override
@@ -111,27 +112,88 @@ public class HashMapDH<Key, Value> extends AbstractHashMap<Key, Value> {
    */
   protected void checkAndResize() {
     if (loadFactor() > criticalLoadFactor) {
-      // TODO: Fill this yourself
-
+      int oldN = N;
+      HashEntry<Key, Value>[] oldBucket = buckets.clone();
+      resizeBuckets(2*N);
+      updateHashParams();
+      n=0;
+     for(int i =0 ;i<oldN; i++){
+       if(oldBucket[i]!=null && oldBucket[i].getKey()!=null){
+         put(oldBucket[i].getKey(),oldBucket[i].getValue());
+       }
+      }
     }
+  }
+// get new position for key
+  // when the key is not exits give -1 else return index of key in bucket
+  private int getHashValue(Key k){
+    int hashVal;
+    for(int i=0; i<N; i++){
+      hashVal = hashValue(k,i) ;
+      HashEntry<Key, Value> currentEntry = buckets[hashVal];
+      if( currentEntry == null){
+        break;
+      }else if(currentEntry.getKey()!=null && currentEntry.getKey().equals(k)){
+        return hashVal;
+      }
+    }
+    return -1;
   }
 
   @Override
   public Value get(Key k) {
-    // TODO Auto-generated method stub
+    if(k==null){
+      return null;
+    }
+    int hashVal = getHashValue(k);
+    if( hashVal != -1){
+      return buckets[hashVal].getValue();
+    }
+
     return null;
   }
-
+/*
+* probably should check
+ */
   @Override
   public Value put(Key k, Value v) {
-    // TODO Auto-generated method stub
-    // Do not forget to resize if needed!
+    if(k==null){
+      return null;
+    }
+    int hashVal = getHashValue(k);
+    if(hashVal!=-1){
+        Value oldVal = buckets[hashVal].getValue();
+        buckets[hashVal] = new HashEntry<>(k, v);
+        return oldVal;
+    }else {
+      checkAndResize();
+      n++;
+      for (int i = 0; i < N; i++) {
+        hashVal = hashValue(k, i);
+        HashEntry<Key, Value> currentEntry = buckets[hashVal];
+        if (currentEntry == null || currentEntry.getKey() == null) {
+          buckets[hashVal] = new HashEntry<>(k, v);
+          break;
+        }
+      }
+    }
     return null;
   }
 
   @Override
   public Value remove(Key k) {
-    // TODO Auto-generated method stub
+    if(k==null){
+      return null;
+    }
+    int hashVal = getHashValue(k);
+    if(hashVal != -1){
+      Value oldVal = buckets[hashVal].getValue();
+      buckets[hashVal].setKey(null);
+      buckets[hashVal].setValue(null);
+
+      n--;
+      return oldVal;
+    }
     return null;
   }
 
@@ -139,8 +201,13 @@ public class HashMapDH<Key, Value> extends AbstractHashMap<Key, Value> {
   // structure!
   @Override
   public Iterable<Key> keySet() {
-    // TODO Auto-generated method stub
-    return null;
+    List<Key> iter = new LinkedList<>();
+    for(int i=0; i<N; i++){
+      if(buckets[i]!=null && buckets[i].getKey() != null){
+        iter.add(buckets[i].getKey());
+      }
+    }
+    return iter;
   }
 
   @Override

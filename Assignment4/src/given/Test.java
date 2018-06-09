@@ -452,7 +452,7 @@ public class Test {
   public static void main(String[] args) {
     Autograder.init();
     // set to false if you do not want any output
-    verbose = false;
+    verbose = true;
 
     if (verbose)
       System.out.println("Testing hashmaps: ");

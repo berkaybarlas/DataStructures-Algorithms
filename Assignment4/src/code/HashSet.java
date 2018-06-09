@@ -1,5 +1,6 @@
 package code;
 
+import given.AbstractHashMap;
 import given.iPrintable;
 import given.iSet;
 
@@ -17,14 +18,15 @@ import given.iSet;
  */
 
 public class HashSet<Key> implements iSet<Key>, iPrintable<Key>{
-  
+
+  //private HashSet<Key>[] buckets;
+  AbstractHashMap<Key,Integer> A;
+  int size = 0;
   // A default public constructor is mandatory!
   public HashSet() {
-   /*
-    * Add code here 
-    */
+   A = new HashMapDH<>();
+
   }
-  
   /*
    * 
    * Add whatever you want!
@@ -33,38 +35,39 @@ public class HashSet<Key> implements iSet<Key>, iPrintable<Key>{
 
   @Override
   public int size() {
-    // TODO Auto-generated method stub
-    return 0;
+    return A.size();
   }
 
   @Override
   public boolean isEmpty() {
-    // TODO Auto-generated method stub
-    return false;
+    return size()==0;
   }
 
   @Override
   public boolean contains(Key k) {
-    // TODO Auto-generated method stub
-    return false;
+    return A.get(k)!=null;
   }
 
   @Override
   public boolean put(Key k) {
-    // TODO Auto-generated method stub
-    return false;
+    //if(!contains(k)){
+      //size++;
+    //}
+    return A.put(k,1)!=null;
   }
 
   @Override
   public boolean remove(Key k) {
-    // TODO Auto-generated method stub
-    return false;
+    //if(contains(k)){
+      //size--;
+    //}
+    return A.remove(k)!=null;
   }
 
   @Override
   public Iterable<Key> keySet() {
     // TODO Auto-generated method stub
-    return null;
+    return A.keySet();
   }
 
   @Override

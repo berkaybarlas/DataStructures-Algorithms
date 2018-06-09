@@ -1,7 +1,10 @@
 package code;
 
 import java.lang.reflect.Array;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
 
 import given.AbstractHashMap;
 import given.HashEntry;
@@ -51,9 +54,8 @@ public class HashMapSC<Key, Value> extends AbstractHashMap<Key, Value> {
   }
 
   public int hashValue(Key key) {
-    // TODO: Implement the hashvalue computation with the MAD method. Will be almost
-    // the same as the primaryHash method of HashMapDH
-    return Math.abs(-1) % N;
+    int k = Math.abs(key.hashCode());
+    return Math.abs((k * a + b) % P) % N;
   }
 
   // Default constructor
@@ -73,7 +75,7 @@ public class HashMapSC<Key, Value> extends AbstractHashMap<Key, Value> {
     
     // Set up the MAD compression and secondary hash parameters
     updateHashParams();
-
+    n =0 ;
     /*
      * ADD MORE CODE IF NEEDED
      * 
@@ -84,10 +86,36 @@ public class HashMapSC<Key, Value> extends AbstractHashMap<Key, Value> {
    * ADD MORE METHODS IF NEEDED
    * 
    */
-
+ private HashEntry<Key, Value> getEntry(Key k){
+   if(k == null){
+     return null;
+   }
+   int hashVal = hashValue(k);
+   if(buckets[hashVal]!=null) {
+     ListIterator iterator = buckets[hashVal].listIterator();
+     /*
+      *think for other ways to do that
+      */
+     while(iterator.hasNext()){
+       Object next = iterator.next();
+       HashEntry<Key, Value> element = (next instanceof HashEntry ? (HashEntry<Key, Value>) next : null);
+       if(element != null && element.getKey()!=null && element.getKey().equals(k)){
+         return element;
+       }
+     }
+   }
+   return null;
+ }
   @Override
   public Value get(Key k) {
     // TODO Auto-generated method stub
+    if(k == null){
+      return null;
+    }
+    HashEntry<Key, Value> entry = getEntry(k);
+    if(entry!=null){
+      return entry.getValue();
+    }
     return null;
   }
 
@@ -96,20 +124,60 @@ public class HashMapSC<Key, Value> extends AbstractHashMap<Key, Value> {
     // TODO Auto-generated method stub
     // Do not forget to resize if needed!
     // Note that the linked lists are not initialized!
+    if(k == null){
+      return null;
+    }
+    HashEntry<Key, Value> entry = getEntry(k);
+    if(entry!=null){
+      Value oldVal = entry.getValue();
+      getEntry(k).setValue(v);
+      return  oldVal;
+    }
+    n++;
+    checkAndResize();
+    int hashVal = hashValue(k);
+    if(buckets[hashVal]==null){
+      buckets[hashVal] = new LinkedList<>();
+    }
+    buckets[hashVal].add(new HashEntry(k,v));
     return null;
   }
-
   @Override
   public Value remove(Key k) {
-    // TODO Auto-generated method stub
+    if(k == null){
+      return null;
+    }
+    HashEntry<Key, Value> entry = getEntry(k);
+    if(entry!=null){
+      n--;
+      buckets[hashValue(k)].remove(entry);
+      return entry.getValue();
+    }
+
     return null;
   }
 
   @Override
   public Iterable<Key> keySet() {
     // TODO Auto-generated method stub
-    return null;
+    List<Key> iter = new LinkedList<>();
+    for(int i=0; i<N; i++){
+      LinkedList<HashEntry<Key,Value>> bucketList = buckets[i];
+      if(bucketList!=null ){
+        for(HashEntry<Key,Value> element : bucketList ){
+          if(element.getKey()!=null)
+          iter.add(element.getKey());
+        }
+      }
+    }
+    return iter;
   }
+
+  /*
+  check again
+   */
+
+
 
   /**
    * checkAndResize checks whether the current load factor is greater than the
@@ -121,7 +189,19 @@ public class HashMapSC<Key, Value> extends AbstractHashMap<Key, Value> {
   protected void checkAndResize() {
     if (loadFactor() > criticalLoadFactor) {
       // TODO: Fill this yourself
-
+      int oldN = N;
+      LinkedList<HashEntry<Key, Value>>[] oldBucket = buckets;
+      resizeBuckets(2*N);
+      updateHashParams();
+      n=0;
+      for(int i =0 ;i<oldN; i++){
+        LinkedList<HashEntry<Key,Value>> bucketList = oldBucket[i];
+        if(bucketList!=null ){
+          for(HashEntry<Key,Value> element : bucketList ){
+            put(element.getKey(),element.getValue());
+          }
+        }
+      }
     }
   }
 }

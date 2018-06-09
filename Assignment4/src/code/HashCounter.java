@@ -31,16 +31,6 @@ public class HashCounter<Key> implements iPrintable<Key> {
   // Total count of all items
   int s;
   
-  /*
-   * ADD MORE FIELDS IF NEEDED
-   * 
-   */
-
-  /*
-   * ADD A NESTED CLASS IF NEEDED
-   * 
-   */
-  
   // The hashmap to be used for counting will be supplied from the outside. 
   // Not the best choice for production code!
   public HashCounter(AbstractHashMap<Key,Integer> inContainer) {
@@ -83,6 +73,14 @@ public class HashCounter<Key> implements iPrintable<Key> {
    */
   public void increment(Key key) {
     //TODO: Implement this
+    Integer val = A.get(key);
+    if(val!=null){
+      A.put(key,val+1);
+      s++;
+    }else{
+      A.put(key,1);
+      s++;
+    }
   }
   
   /*
@@ -91,8 +89,14 @@ public class HashCounter<Key> implements iPrintable<Key> {
    * 
    */
   public int getCount(Key key) {
-    //TODO: Implement this
-    return -1;
+    if(key==null){
+      return 0;
+    }
+    Integer val = A.get(key);
+    if(val!=null){
+      return val;
+    }
+    return 0;
   }
   
   /*
