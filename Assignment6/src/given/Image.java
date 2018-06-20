@@ -91,6 +91,8 @@ public class Image {
 
   public Image(int height, int width) {
     image = new BufferedImage(height, width, BufferedImage.TYPE_INT_RGB);
+    height = image.getHeight();
+    width = image.getWidth();
   }
 
   private void normalizePix(double[][] normPixels) {

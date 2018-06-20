@@ -82,7 +82,7 @@ public interface iGraph<V> {
    *  Creates an edge between vertices source and target with the given weight and returns it.
    *  CAREFUL: Adds the vertices if they are not already in the graph! This is different than most graph ADTs
    *  CAREFUL: If an edge already exists between the vertices: 
-   *  - Updates the weight of the edge for weighted graphs and returns the update edge
+   *  - Updates the weight of the edge for weighted graphs and returns the updated edge
    *  - Does nothing for unweighted graphs
    *  
    *  

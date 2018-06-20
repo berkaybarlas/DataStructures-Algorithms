@@ -118,7 +118,7 @@ public class GraphTesting {
       G.insertEdge('A', 'B');
       G.insertEdge('A', 'C');
       G.insertEdge('B', 'D');
-
+      if(!G.isDirected())G.insertEdge('B', 'A');
       if (G.numEdges() == 3)
         edgeNumCheckCount++;
       else

@@ -98,6 +98,8 @@ public class GradeImagePart {
     
     // Image file names
     String[] imageFiles = {"twitter.png", "Simple.png" };
+    //String[] imageFiles = {"Simple.png"};
+
     // Epsilon threshold values
     double[] epsilons = {5e-2, 1e-2 };
     // double[] epsilons = { 1e0, 1e0, 1e0, 1e0};
